@@ -1,0 +1,48 @@
+{
+  "name": "bookshelf.raw.safe",
+  "version": "0.0.1",
+  "description": "Bookshelf raw extensions to handle things in a safe manner.",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "gulp",
+    "test": "gulp spec"
+  },
+  "homepage": "https://github.com/nmccready/bookshelf.raw.safe",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nmccready/bookshelf.raw.safe.git"
+  },
+  "author": "Nicholas McCready",
+  "license": "MIT",
+  "devDependencies": {
+    "coffee-script": "^1.7.1",
+    "event-stream": "^3.1.5",
+    "gulp": "^3.8.8",
+    "gulp-coffee": "^2.1.1",
+    "gulp-coffeelint": "^0.3.3",
+    "gulp-concat": "^2.3.3",
+    "gulp-debug": "^0.3.0",
+    "gulp-gzip": "0.0.8",
+    "gulp-if": "^1.2.2",
+    "gulp-ignore": "^1.1.0",
+    "gulp-insert": "^0.4.0",
+    "gulp-mocha": "^0.5.1",
+    "gulp-open": "^0.2.8",
+    "gulp-rename": "^1.2.0",
+    "gulp-replace": "^0.4.0",
+    "gulp-rimraf": "^0.1.0",
+    "gulp-serve": "^0.2.0",
+    "gulp-tar": "^0.5.0",
+    "gulp-task-listing": "^0.3.0",
+    "gulp-util": "^2.2.20",
+    "mocha": "^1.20.1",
+    "require-dir": "^0.1.0",
+    "should": "^4.0.4",
+    "through2": "^0.5.1"
+  },
+  "dependencies": {
+    "lodash": "^2.4.1",
+    "bluebird": "^2.3.2",
+    "http-status": "^0.1.8"
+  }
+}
