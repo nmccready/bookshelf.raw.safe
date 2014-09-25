@@ -3,7 +3,7 @@
  *
  * @version: 0.0.1
  * @author: Nicholas McCready
- * @date: Wed Sep 24 2014 12:49:58 GMT-0400 (EDT)
+ * @date: Wed Sep 24 2014 21:34:10 GMT-0400 (EDT)
  * @license: MIT
 
     
@@ -14,7 +14,7 @@
 |_.__/ \___/ \___/|_|\_\___/_| |_|\___|_|_|(_)_|  \__,_| \_/\_(_)___/\__,_|_|  \___|
 
  */
-var Promise, handleError, makeStringLoggable, myDummyLogger, status, _;
+var Promise, makeStringLoggable, myDummyLogger, status, _;
 
 Promise = require('bluebird');
 
@@ -42,18 +42,6 @@ makeStringLoggable = function(name) {
   @return {object} Promise
  */
 
-handleError = function(callingFnName, e, status, next) {
-  logger.error("failed to " + callingFnName + e.message);
-  if (typeof next === "function") {
-    next({
-      status: status,
-      message: e.message
-    });
-  }
-  e.isLogged = true;
-  return Promise.reject(e);
-};
-
 myDummyLogger = _.extend(console, {
   debug: function() {
     return console.info.apply(null, arguments);
@@ -61,9 +49,21 @@ myDummyLogger = _.extend(console, {
 });
 
 module.exports = function(logger) {
+  var handleError;
   if (logger == null) {
     logger = myDummyLogger;
   }
+  handleError = function(callingFnName, e, status, next) {
+    logger.error("failed to " + callingFnName + e.message);
+    if (typeof next === "function") {
+      next({
+        status: status,
+        message: e.message
+      });
+    }
+    e.isLogged = true;
+    return Promise.reject(e);
+  };
   return {
     safeQuery: function(db, sql, next, callingFnName) {
       if (callingFnName == null) {

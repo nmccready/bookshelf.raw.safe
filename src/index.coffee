@@ -18,18 +18,20 @@ makeStringLoggable = (name) ->
   @return {object} Promise
 ###
 
-handleError = (callingFnName, e, status, next) ->
-  logger.error "failed to #{callingFnName}#{e.message}"
-
-  next?({status:status, message: e.message})
-  e.isLogged = true
-  Promise.reject e
-
 myDummyLogger = _.extend console,
   debug: ->
     console.info.apply(null,arguments)
 
 module.exports = (logger = myDummyLogger) ->
+
+  handleError = (callingFnName, e, status, next) ->
+    logger.error "failed to #{callingFnName}#{e.message}"
+
+    next?({status:status, message: e.message})
+    e.isLogged = true
+    Promise.reject e
+
+
   safeQuery: (db, sql, next, callingFnName = 'bookshelf.raw') ->
     return Promise.reject 'db is not defined' unless db
     return Promise.reject 'sql is not defined' unless sql

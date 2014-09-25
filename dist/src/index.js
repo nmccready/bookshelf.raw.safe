@@ -1,4 +1,4 @@
-var Promise, handleError, makeStringLoggable, myDummyLogger, status, _;
+var Promise, makeStringLoggable, myDummyLogger, status, _;
 
 Promise = require('bluebird');
 
@@ -26,18 +26,6 @@ makeStringLoggable = function(name) {
   @return {object} Promise
  */
 
-handleError = function(callingFnName, e, status, next) {
-  logger.error("failed to " + callingFnName + e.message);
-  if (typeof next === "function") {
-    next({
-      status: status,
-      message: e.message
-    });
-  }
-  e.isLogged = true;
-  return Promise.reject(e);
-};
-
 myDummyLogger = _.extend(console, {
   debug: function() {
     return console.info.apply(null, arguments);
@@ -45,9 +33,21 @@ myDummyLogger = _.extend(console, {
 });
 
 module.exports = function(logger) {
+  var handleError;
   if (logger == null) {
     logger = myDummyLogger;
   }
+  handleError = function(callingFnName, e, status, next) {
+    logger.error("failed to " + callingFnName + e.message);
+    if (typeof next === "function") {
+      next({
+        status: status,
+        message: e.message
+      });
+    }
+    e.isLogged = true;
+    return Promise.reject(e);
+  };
   return {
     safeQuery: function(db, sql, next, callingFnName) {
       if (callingFnName == null) {

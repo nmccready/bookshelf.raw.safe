@@ -1,5 +1,21 @@
 should = require 'should'
-project = do require '../src/index'
+mockLoggerLogWasCalled = false
+mockLoggerInfoWasCalled = false
+mockLoggerErrorWasCalled = false
+
+mockLogger =
+  log: ->
+    mockLoggerLogWasCalled = true
+  info: ->
+    mockLoggerInfoWasCalled = true
+  debug: ->
+    mockLoggerDebugWasCalled = true
+  warn: ->
+    mockLoggerWarnWasCalled = true
+  error: ->
+    mockLoggerErrorWasCalled = true
+
+project = require('../src/index')(mockLogger)
 Promise = require 'bluebird'
 next = undefined
 thisPackage = require '../package'
@@ -24,6 +40,10 @@ describe 'bookshelf.raw.safe', ->
 
   describe 'safeQuery', ->
     beforeEach ->
+      mockLoggerLogWasCalled = false
+      mockLoggerInfoWasCalled = false
+      mockLoggerErrorWasCalled = false
+
       subject = project.safeQuery
 
       next = ->
@@ -50,6 +70,7 @@ describe 'bookshelf.raw.safe', ->
       promise = subject @db, testSql, next, 'testFn'
 
       promise.then (result) =>
+        mockLoggerLogWasCalled.should.be.ok
         result.should.be.eql {}
         @calledSql.should.be.eql testSql
         done()
@@ -61,6 +82,7 @@ describe 'bookshelf.raw.safe', ->
       .catch (e) =>
         error = true
         @calledSql.should.not.be.eql testSql
+        mockLoggerErrorWasCalled.should.be.ok
       .then ->
         error.should.be.ok
         done()
